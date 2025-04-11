@@ -1,103 +1,193 @@
-import Image from "next/image";
+"use client";
+
+import { useState, ChangeEvent } from 'react';
+import Image from 'next/image';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+interface PhotoPreview {
+  frontView: string;
+  sideView?: string;
+  additionalView?: string;
+}
+
+interface Measurements {
+  height: string;
+  weight: string;
+  bodyType: 'slim' | 'athletic' | 'average' | 'full';
+  chest: string;
+  waist: string;
+  hips: string;
+  shoulders: string;
+  inseam: string;
+}
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [name, setName] = useState('');
+  const [photos, setPhotos] = useState<PhotoPreview>({ frontView: '' });
+  const [measurements, setMeasurements] = useState<Measurements>({
+    height: '',
+    weight: '',
+    bodyType: 'average',
+    chest: '',
+    waist: '',
+    hips: '',
+    shoulders: '',
+    inseam: '',
+  });
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const handlePhotoUpload = (type: keyof PhotoPreview) => (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setPhotos(prev => ({
+          ...prev,
+          [type]: event.target?.result as string
+        }));
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
+
+  const handleDeploy = async () => {
+    // TODO: Implement extension communication
+    console.log('Deploying avatar:', { name, photos, measurements });
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Shwag Avatar Creator</h1>
+          <p className="mt-2 text-gray-600">Customize your virtual try-on avatar</p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Photo Upload Section */}
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">Photos</h2>
+            
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="frontView">Front View (Required)</Label>
+                <Input
+                  id="frontView"
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoUpload('frontView')}
+                  className="mt-1"
+                />
+                {photos.frontView && (
+                  <div className="mt-2 relative h-40 w-full">
+                    <Image
+                      src={photos.frontView}
+                      alt="Front view"
+                      fill
+                      className="object-contain rounded-md"
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <Label htmlFor="sideView">Side View (Optional)</Label>
+                <Input
+                  id="sideView"
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoUpload('sideView')}
+                  className="mt-1"
+                />
+                {photos.sideView && (
+                  <div className="mt-2 relative h-40 w-full">
+                    <Image
+                      src={photos.sideView}
+                      alt="Side view"
+                      fill
+                      className="object-contain rounded-md"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </Card>
+
+          {/* Measurements Section */}
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">Measurements</h2>
+            
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  value={name}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                  placeholder="Avatar name"
+                  className="mt-1"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="height">Height (cm)</Label>
+                <Input
+                  id="height"
+                  type="number"
+                  value={measurements.height}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setMeasurements(prev => ({ ...prev, height: e.target.value }))}
+                  placeholder="175"
+                  className="mt-1"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="bodyType">Body Type</Label>
+                <Select
+                  value={measurements.bodyType}
+                  onValueChange={(value: 'slim' | 'athletic' | 'average' | 'full') => 
+                    setMeasurements(prev => ({ ...prev, bodyType: value }))
+                  }
+                >
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Select body type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="slim">Slim</SelectItem>
+                    <SelectItem value="athletic">Athletic</SelectItem>
+                    <SelectItem value="average">Average</SelectItem>
+                    <SelectItem value="full">Full</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="weight">Weight (kg)</Label>
+                <Input
+                  id="weight"
+                  type="number"
+                  value={measurements.weight}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setMeasurements(prev => ({ ...prev, weight: e.target.value }))}
+                  placeholder="70"
+                  className="mt-1"
+                />
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        <div className="mt-8 flex justify-center">
+          <Button
+            size="lg"
+            onClick={handleDeploy}
+            className="bg-black text-white hover:bg-gray-800"
+          >
+            Deploy to Extension
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
