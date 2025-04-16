@@ -64,7 +64,7 @@ if ("TURBOPACK compile-time truthy", 1) {
         var exports = {};
         'use strict';
         var React = __turbopack_context__.r("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
-        var Scheduler = __turbopack_context__.r("[project]/node_modules/@react-three/fiber/node_modules/scheduler/index.js [app-ssr] (ecmascript)");
+        var Scheduler = __turbopack_context__.r("[project]/node_modules/scheduler/index.js [app-ssr] (ecmascript)");
         var ReactSharedInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
         var suppressWarning = false;
         function setSuppressWarning(newSuppressWarning) {
